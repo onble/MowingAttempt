@@ -17,6 +17,17 @@ export class Joystick extends Component {
 
     /** 存储整体控制器的半径 */
     private _radius: number = 0;
+    /** 存储触摸点的世界坐标world position */
+    private _v2: Vec2 = new Vec2();
+    private _touchWorldPos: Vec3 = new Vec3();
+    private _currPos: Vec3 = new Vec3();
+    private readonly _startPos: Vec3 = new Vec3(0, 0);
+
+    private _listeneer: Function;
+    private _target: any;
+
+    /** 存储每次角度 */
+    private _arrArg: number[] = [0];
 
     protected onEnable(): void {
         // 根据整体图片的大小获得控制器的半径
@@ -50,31 +61,30 @@ export class Joystick extends Component {
 
     onHandMove(event: EventTouch) {
         // 获得触摸点的世界坐标world position
-        const v2: math.Vec2 = event.getUILocation();
-        const touchWorldPos = new Vec3(v2.x, v2.y);
-        // 触摸点在Joystick节点的相对坐标
-        const currPos = new Vec3();
+        event.getUILocation(this._v2);
+        this._touchWorldPos.set(this._v2.x, this._v2.y);
         this.node
             .getComponent(UITransform)
-            .convertToNodeSpaceAR(touchWorldPos, currPos);
+            .convertToNodeSpaceAR(this._touchWorldPos, this._currPos);
 
-        const startPos = new Vec3(0, 0);
-
-        const distance = Vec2.distance(startPos, currPos);
+        const distance = Vec2.distance(this._startPos, this._currPos);
         const radian = Math.atan2(
-            currPos.y - startPos.y,
-            currPos.x - startPos.x
+            this._currPos.y - this._startPos.y,
+            this._currPos.x - this._startPos.x
         );
 
         if (distance < this._radius) {
             // 如果没有超出半径的距离，就直接放到触摸点的位置
-            this.ndHand.setPosition(currPos);
+            this.ndHand.setPosition(this._currPos);
         } else {
             // 超出半径的位置，就放到边界的位置
-            const x = startPos.x + Math.cos(radian) * this._radius;
-            const y = startPos.y + Math.sin(radian) * this._radius;
+            const x = this._startPos.x + Math.cos(radian) * this._radius;
+            const y = this._startPos.y + Math.sin(radian) * this._radius;
             this.ndHand.setPosition(x, y);
         }
+
+        this._arrArg[0] = radian;
+        this._listeneer && this._listeneer.apply(this._target, this._arrArg);
     }
 
     onHandEnd() {
@@ -85,5 +95,10 @@ export class Joystick extends Component {
     onHandCancel() {
         // 将中间的控制器位置归零
         this.ndHand.setPosition(0, 0);
+    }
+
+    onTouchEvent(listener: Function, target?: any) {
+        this._listeneer = listener;
+        this._target = target;
     }
 }
