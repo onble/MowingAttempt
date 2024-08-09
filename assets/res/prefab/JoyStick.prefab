@@ -29,10 +29,13 @@
       },
       {
         "__id__": 10
+      },
+      {
+        "__id__": 12
       }
     ],
     "_prefab": {
-      "__id__": 12
+      "__id__": 14
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -64,7 +67,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Handle 5 Small",
+    "_name": "Joystick_Handle",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -261,6 +264,23 @@
   {
     "__type__": "cc.CompPrefabInfo",
     "fileId": "50rZZ2UzxK36C3RctcjvVg"
+  },
+  {
+    "__type__": "59dfeEFuNpESI/A8Y5cDL/P",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "__prefab": {
+      "__id__": 13
+    },
+    "_id": ""
+  },
+  {
+    "__type__": "cc.CompPrefabInfo",
+    "fileId": "abL0gE5NtGvretoOQYovcG"
   },
   {
     "__type__": "cc.PrefabInfo",
