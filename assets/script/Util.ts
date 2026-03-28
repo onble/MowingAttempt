@@ -1,4 +1,5 @@
-import { instantiate, Label, Node, Prefab, resources, tween, Vec3 } from "cc";
+import { instantiate, Label, Node, Prefab, random, randomRange, randomRangeInt, resources, tween, Vec3 } from "cc";
+import { Monster } from "./Monster";
 
 export class Util {
     static showText(text: string, worldPos: Vec3, parent: Node) {
@@ -8,9 +9,10 @@ export class Util {
                 return;
             }
             const ndText = instantiate(prefab);
+            ndText.parent = parent;
+
             ndText.getComponent(Label).string = text;
-            ndText.setPosition(worldPos);
-            parent.addChild(ndText);
+            ndText.setWorldPosition(worldPos);
 
             tween(ndText)
                 .delay(1.5)
@@ -18,6 +20,23 @@ export class Util {
                     ndText.destroy();
                 })
                 .start();
+        });
+    }
+
+    static createMonster(count: number, parent: Node) {
+        resources.load("PinkMonster", (err, prefab: Prefab) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+
+            for (let i = 0; i < count; i++) {
+                const ndMonster = instantiate(prefab);
+                ndMonster.parent = parent;
+
+                ndMonster.setPosition(randomRangeInt(-1000, 1000), randomRangeInt(-1000, 1000));
+                ndMonster.getComponent(Monster).speed = randomRangeInt(0, 2) * random();
+            }
         });
     }
 }

@@ -2,6 +2,7 @@ import { _decorator, Component, Layers, Node } from "cc";
 import { Joystick } from "./Joystick";
 import { Player } from "./Player";
 import { BattleContext } from "./BattleContext";
+import { Util } from "./Util";
 const { ccclass, property } = _decorator;
 
 @ccclass("Battle")
@@ -12,9 +13,13 @@ export class Battle extends Component {
     protected onLoad(): void {
         BattleContext.ndPlayer = this.ndPlayer;
 
+        const ndMonsterParent = new Node("MonsterParent");
+        ndMonsterParent.layer = Layers.Enum.UI_2D;
+        this.node.addChild(ndMonsterParent);
+        BattleContext.ndMonsterParent = ndMonsterParent;
+
         const ndTextParent = new Node("TextParent");
         ndTextParent.layer = Layers.Enum.UI_2D;
-
         this.node.addChild(ndTextParent);
         BattleContext.ndTextParent = ndTextParent;
     }
@@ -42,9 +47,11 @@ export class Battle extends Component {
         this.ndPlayer.getComponent(Player).isMoving = true;
     }
 
-    protected onDestroy(): void {}
-
-    start() {}
+    start() {
+        Util.createMonster(100, BattleContext.ndMonsterParent);
+    }
 
     update(deltaTime: number) {}
+
+    protected onDestroy(): void {}
 }
