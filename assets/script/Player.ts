@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, toDegree } from "cc";
+import { _decorator, Collider2D, Component, Contact2DType, Node, toDegree } from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("Player")
@@ -18,6 +18,15 @@ export class Player extends Component {
      * 运动状态
      */
     isMoving: boolean = false;
+
+    //#region 生命周期
+    protected onEnable(): void {
+        const colldier = this.node.getComponent(Collider2D);
+        if (colldier) {
+            colldier.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            colldier.on(Contact2DType.END_CONTACT, this.onEndContact, this);
+        }
+    }
     start() {
         this.isMoving = false;
     }
@@ -36,4 +45,22 @@ export class Player extends Component {
             }
         }
     }
+
+    protected onDisable(): void {
+        const colldier = this.node.getComponent(Collider2D);
+        if (colldier) {
+            colldier.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            colldier.off(Contact2DType.END_CONTACT, this.onEndContact, this);
+        }
+    }
+
+    //#endregion 生命周期
+
+    //#region 事件监听
+    private onBeginContact(self: Collider2D, other: Collider2D) {
+        console.log("碰撞开始", self, other);
+    }
+
+    private onEndContact(self: Collider2D, other: Collider2D) {}
+    //#endregion 事件监听
 }
