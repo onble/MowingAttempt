@@ -1,15 +1,16 @@
 import { _decorator, Component, Node, toDegree } from "cc";
+import { BattleContext } from "./BattleContext";
 const { ccclass, property } = _decorator;
 
-@ccclass("Player")
-export class Player extends Component {
+@ccclass("Monster")
+export class Monster extends Component {
     @property(Node)
     private ndAni: Node;
 
     /**
      * 速度
      */
-    speed: number = 4;
+    speed: number = 2;
     /**
      * 方向
      */
@@ -18,8 +19,21 @@ export class Player extends Component {
      * 运动状态
      */
     isMoving: boolean = false;
+
+    protected onEnable(): void {}
+
+    protected onDisable(): void {}
     start() {
-        this.isMoving = false;
+        this.isMoving = true;
+        this.schedule(() => {
+            if (!BattleContext.ndPlayer || !BattleContext.ndPlayer.isValid) {
+                return;
+            }
+
+            const deltaX = BattleContext.ndPlayer.worldPosition.x - this.node.worldPosition.x;
+            const deltaY = BattleContext.ndPlayer.worldPosition.y - this.node.worldPosition.y;
+            this.moveDirection = Math.atan2(deltaY, deltaX);
+        }, 0.1);
     }
 
     update(deltaTime: number) {
