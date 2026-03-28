@@ -1,4 +1,7 @@
 import { _decorator, Collider2D, Component, Contact2DType, Node, toDegree } from "cc";
+import { Constant } from "./Constant";
+import { Util } from "./Util";
+import { BattleContext } from "./BattleContext";
 const { ccclass, property } = _decorator;
 
 @ccclass("Player")
@@ -58,7 +61,10 @@ export class Player extends Component {
 
     //#region 事件监听
     private onBeginContact(self: Collider2D, other: Collider2D) {
-        console.log("碰撞开始", self, other);
+        console.warn("onBeginContact", this.node.worldPosition, other.group);
+        if (other.group === Constant.ColliderGroup.MONSTER) {
+            Util.showText("1000", this.node.worldPosition, BattleContext.ndTextParent);
+        }
     }
 
     private onEndContact(self: Collider2D, other: Collider2D) {}

@@ -1,4 +1,4 @@
-import { _decorator, Component, Node } from "cc";
+import { _decorator, Component, Layers, Node } from "cc";
 import { Joystick } from "./Joystick";
 import { Player } from "./Player";
 import { BattleContext } from "./BattleContext";
@@ -11,6 +11,12 @@ export class Battle extends Component {
 
     protected onLoad(): void {
         BattleContext.ndPlayer = this.ndPlayer;
+
+        const ndTextParent = new Node("TextParent");
+        ndTextParent.layer = Layers.Enum.UI_2D;
+
+        this.node.addChild(ndTextParent);
+        BattleContext.ndTextParent = ndTextParent;
     }
 
     protected onEnable(): void {
