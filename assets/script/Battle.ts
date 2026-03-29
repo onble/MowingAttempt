@@ -72,7 +72,8 @@ export class Battle extends Component {
             node.getComponent(Monster).speed = 1.2;
         }
 
-        BattleContext.ndPlayer.getComponent(Player).startEndlessDagger();
-        BattleContext.ndPlayer.getComponent(Player).startSoundingSword();
+        // BattleContext.ndPlayer.getComponent(Player).startEndlessDagger();
+        // BattleContext.ndPlayer.getComponent(Player).startSoundingSword();
+        BattleContext.ndPlayer.getComponent(Player).startFireball();
     }
 }

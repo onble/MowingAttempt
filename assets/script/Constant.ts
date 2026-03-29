@@ -13,10 +13,12 @@ export class Constant {
         PINK_MONSTER: "PinkMonster",
         DAGGER: "Dagger",
         SURROUND: "Surround",
+        FIREBALL: "Fireball",
     };
 
     static readonly WeaponTag = {
         DAGGER: 0,
         SWORD: 1,
+        FIREBALL: 2,
     };
 }

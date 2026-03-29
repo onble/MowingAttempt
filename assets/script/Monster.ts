@@ -106,6 +106,14 @@ export class Monster extends Component {
                     );
                     this.hurt(other.node.getComponent(Sword).attack);
                     break;
+                case Constant.WeaponTag.FIREBALL:
+                    Util.showText(
+                        `${other.node.getComponent(Weapon).attack}`,
+                        this.node.worldPosition,
+                        BattleContext.ndTextParent,
+                    );
+                    this.hurt(other.node.getComponent(Weapon).attack);
+                    break;
                 default:
                     break;
             }
