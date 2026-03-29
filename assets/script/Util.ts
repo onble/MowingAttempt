@@ -33,18 +33,6 @@ export class Util {
         return ndMonster;
     }
 
-    static loadPf(url: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            resources.load(url, Prefab, (err, prefab: Prefab) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(prefab);
-                }
-            });
-        });
-    }
-
     static moveNode(node: Node, radian: number, distance: number) {
         const x = node.position.x + Math.cos(radian) * distance;
         const y = node.position.y + Math.sin(radian) * distance;

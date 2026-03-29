@@ -5,6 +5,7 @@ import { BattleContext } from "./BattleContext";
 import { Util } from "./Util";
 import { Monster } from "./Monster";
 import { Constant } from "./Constant";
+import { ResUtil } from "./ResUtil";
 const { ccclass, property } = _decorator;
 
 @ccclass("Battle")
@@ -56,7 +57,7 @@ export class Battle extends Component {
         const promises: Promise<any>[] = [];
         keys.forEach((key) => {
             const url = Constant.PrefabUrl[key];
-            const p = Util.loadPf(url).then((pf: Prefab) => {
+            const p = ResUtil.loadPrefab(url).then((pf: Prefab) => {
                 BattleContext.prefabs[url] = pf;
             });
             promises.push(p);
