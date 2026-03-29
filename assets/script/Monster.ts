@@ -1,5 +1,8 @@
-import { _decorator, Component, Node, toDegree } from "cc";
+import { _decorator, Collider2D, Component, Contact2DType, Node, toDegree } from "cc";
 import { BattleContext } from "./BattleContext";
+import { Constant } from "./Constant";
+import { Util } from "./Util";
+import { Weapon } from "./Weapon";
 const { ccclass, property } = _decorator;
 
 @ccclass("Monster")
@@ -20,9 +23,15 @@ export class Monster extends Component {
      */
     isMoving: boolean = false;
 
-    protected onEnable(): void {}
+    //#region 生命周期
+    protected onEnable(): void {
+        const colldier = this.node.getComponent(Collider2D);
+        if (colldier) {
+            colldier.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            colldier.on(Contact2DType.END_CONTACT, this.onEndContact, this);
+        }
+    }
 
-    protected onDisable(): void {}
     start() {
         this.isMoving = true;
         this.schedule(() => {
@@ -50,4 +59,35 @@ export class Monster extends Component {
             }
         }
     }
+
+    protected onDisable(): void {
+        const colldier = this.node.getComponent(Collider2D);
+        if (colldier) {
+            colldier.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            colldier.off(Contact2DType.END_CONTACT, this.onEndContact, this);
+        }
+    }
+
+    //#endregion 生命周期
+
+    //#region 事件监听
+    private onBeginContact(self: Collider2D, other: Collider2D) {
+        if (other.group === Constant.ColliderGroup.PLAYER_WEAPON) {
+            switch (other.tag) {
+                case Constant.WeaponTag.DAGGER:
+                    Util.showText(
+                        BattleContext.prefabs[Constant.PrefabUrl.DAMAGE_TEXT],
+                        `${other.node.getComponent(Weapon).attack}`,
+                        this.node.worldPosition,
+                        BattleContext.ndTextParent,
+                    );
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private onEndContact(self: Collider2D, other: Collider2D) {}
+    //#endregion 事件监听
 }

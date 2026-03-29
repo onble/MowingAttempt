@@ -11,5 +11,10 @@ export class Constant {
     static readonly PrefabUrl = {
         DAMAGE_TEXT: "DamageText",
         PINK_MONSTER: "PinkMonster",
+        DAGGER: "Dagger",
+    };
+
+    static readonly WeaponTag = {
+        DAGGER: 0,
     };
 }

@@ -15,15 +15,16 @@ export class Battle extends Component {
     protected onLoad(): void {
         BattleContext.ndPlayer = this.ndPlayer;
 
-        const ndMonsterParent = new Node("MonsterParent");
-        ndMonsterParent.layer = Layers.Enum.UI_2D;
-        this.node.addChild(ndMonsterParent);
-        BattleContext.ndMonsterParent = ndMonsterParent;
+        const creatSubNode = (name: string) => {
+            const subNode = new Node(name);
+            this.node.addChild(subNode);
+            subNode.layer = Layers.Enum.UI_2D;
+            return subNode;
+        };
 
-        const ndTextParent = new Node("TextParent");
-        ndTextParent.layer = Layers.Enum.UI_2D;
-        this.node.addChild(ndTextParent);
-        BattleContext.ndTextParent = ndTextParent;
+        BattleContext.ndMonsterParent = creatSubNode("MonsterParent");
+        BattleContext.ndTextParent = creatSubNode("TextParent");
+        BattleContext.ndWeapon = creatSubNode("Weapon");
     }
 
     //#region 生命周期
@@ -80,5 +81,7 @@ export class Battle extends Component {
             node.setPosition(randomRangeInt(-500, 500), randomRangeInt(-500, 500));
             node.getComponent(Monster).speed = 1.2;
         }
+
+        BattleContext.ndPlayer.getComponent(Player).startEndlessDagger();
     }
 }

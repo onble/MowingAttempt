@@ -34,4 +34,10 @@ export class Util {
             });
         });
     }
+
+    static moveNode(node: Node, radian: number, distance: number) {
+        const x = node.position.x + Math.cos(radian) * distance;
+        const y = node.position.y + Math.sin(radian) * distance;
+        node.setPosition(x, y);
+    }
 }

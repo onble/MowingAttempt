@@ -1,7 +1,8 @@
-import { _decorator, Collider2D, Component, Contact2DType, Node, toDegree } from "cc";
+import { _decorator, Collider2D, Component, Contact2DType, instantiate, Node, toDegree, tween } from "cc";
 import { Constant } from "./Constant";
 import { Util } from "./Util";
 import { BattleContext } from "./BattleContext";
+import { Weapon } from "./Weapon";
 const { ccclass, property } = _decorator;
 
 @ccclass("Player")
@@ -61,7 +62,6 @@ export class Player extends Component {
 
     //#region 事件监听
     private onBeginContact(self: Collider2D, other: Collider2D) {
-        console.warn("onBeginContact", this.node.worldPosition, other.group);
         if (other.group === Constant.ColliderGroup.MONSTER) {
             Util.showText(
                 BattleContext.prefabs[Constant.PrefabUrl.DAMAGE_TEXT],
@@ -74,4 +74,23 @@ export class Player extends Component {
 
     private onEndContact(self: Collider2D, other: Collider2D) {}
     //#endregion 事件监听
+
+    startEndlessDagger() {
+        const tw = tween(this.node)
+            .delay(0.1)
+            .call(() => {
+                const pfDagger = BattleContext.prefabs[Constant.PrefabUrl.DAGGER];
+                const ndDagger = instantiate(pfDagger);
+
+                ndDagger.parent = BattleContext.ndWeapon;
+                ndDagger.worldPosition = this.node.worldPosition;
+                ndDagger.angle = toDegree(this.moveDirection);
+
+                const wp = ndDagger.getComponent(Weapon);
+                wp.isMoving = true;
+                wp.moveDirection = this.moveDirection;
+            });
+
+        tween(this.node).repeatForever(tw).start();
+    }
 }
