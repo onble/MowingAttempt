@@ -4,6 +4,7 @@ import { Player } from "./Player";
 import { BattleContext } from "./BattleContext";
 import { Util } from "./Util";
 import { Monster } from "./Monster";
+import { Constant } from "./Constant";
 const { ccclass, property } = _decorator;
 
 @ccclass("Battle")
@@ -50,7 +51,17 @@ export class Battle extends Component {
     }
 
     start() {
-        this._loadPrefabs().then(() => {
+        const keys = Object.keys(Constant.PrefabUrl);
+        const promises: Promise<any>[] = [];
+        keys.forEach((key) => {
+            const url = Constant.PrefabUrl[key];
+            const p = Util.loadPf(url).then((pf: Prefab) => {
+                BattleContext.prefabs[url] = pf;
+            });
+            promises.push(p);
+        });
+
+        Promise.all(promises).then(() => {
             this._startGame();
         });
     }
@@ -67,22 +78,7 @@ export class Battle extends Component {
         for (let i = 0; i < 100; i++) {
             const node = Util.createMonster(BattleContext.prefabs["PinkMonster"], BattleContext.ndMonsterParent);
             node.setPosition(randomRangeInt(-500, 500), randomRangeInt(-500, 500));
-            node.getComponent(Monster).speed = 1.5;
+            node.getComponent(Monster).speed = 1.2;
         }
-    }
-
-    private _loadPrefabs() {
-        return new Promise((resolve, reject) => {
-            resources.load("PinkMonster", (err: Error, prefab: Prefab) => {
-                if (err) {
-                    reject(null);
-                    return;
-                }
-
-                resolve(prefab);
-            });
-        }).then((prefab: Prefab) => {
-            BattleContext.prefabs[prefab.name] = prefab;
-        });
     }
 }

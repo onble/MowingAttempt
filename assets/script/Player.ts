@@ -63,7 +63,12 @@ export class Player extends Component {
     private onBeginContact(self: Collider2D, other: Collider2D) {
         console.warn("onBeginContact", this.node.worldPosition, other.group);
         if (other.group === Constant.ColliderGroup.MONSTER) {
-            Util.showText("12", this.node.worldPosition, BattleContext.ndTextParent);
+            Util.showText(
+                BattleContext.prefabs[Constant.PrefabUrl.DAMAGE_TEXT],
+                "12",
+                this.node.worldPosition,
+                BattleContext.ndTextParent,
+            );
         }
     }
 

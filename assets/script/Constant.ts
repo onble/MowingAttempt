@@ -7,4 +7,9 @@ export class Constant {
         MONSTER_WEAPON: 1 << 4,
         OBSTACLE: 1 << 5,
     };
+
+    static readonly PrefabUrl = {
+        DAMAGE_TEXT: "DamageText",
+        PINK_MONSTER: "PinkMonster",
+    };
 }

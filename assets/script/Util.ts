@@ -2,30 +2,36 @@ import { instantiate, Label, Node, Prefab, random, randomRange, randomRangeInt, 
 import { Monster } from "./Monster";
 
 export class Util {
-    static showText(text: string, worldPos: Vec3, parent: Node) {
-        resources.load("DamageText", (err, prefab: Prefab) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            const ndText = instantiate(prefab);
-            ndText.parent = parent;
+    static showText(pf: Prefab, text: string, worldPos: Vec3, parent: Node) {
+        const ndText = instantiate(pf);
+        ndText.parent = parent;
 
-            ndText.getComponent(Label).string = text;
-            ndText.setWorldPosition(worldPos);
+        ndText.getComponent(Label).string = text;
+        ndText.setWorldPosition(worldPos);
 
-            tween(ndText)
-                .delay(1.5)
-                .call(() => {
-                    ndText.destroy();
-                })
-                .start();
-        });
+        tween(ndText)
+            .delay(1.5)
+            .call(() => {
+                ndText.destroy();
+            })
+            .start();
     }
 
     static createMonster(prefab: Prefab, parent: Node) {
         const ndMonster = instantiate(prefab);
         ndMonster.parent = parent;
         return ndMonster;
+    }
+
+    static loadPf(url: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            resources.load(url, Prefab, (err, prefab: Prefab) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(prefab);
+                }
+            });
+        });
     }
 }
