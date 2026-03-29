@@ -146,11 +146,11 @@ export class Player extends Component {
 
     startFireball() {
         const tw = tween(this.node)
-            .delay(0.2)
+            .delay(2)
             .call(() => {
                 const deltaAngle = 10;
                 const startDegree = toDegree(this.attackDirection) - 17 * deltaAngle;
-                for (let i = 0; i < 35; i++) {
+                for (let i = 0; i < 2; i++) {
                     const ndFireball = Globals.getNode(Constant.PrefabUrl.FIREBALL, BattleContext.ndWeapon);
 
                     ndFireball.worldPosition = this.node.worldPosition;
@@ -160,7 +160,7 @@ export class Player extends Component {
                     wp.isMoving = true;
                     wp.moveDirection = toRadian(startDegree + deltaAngle * i);
                     wp.attack = 30;
-                    wp.speed = 12;
+                    wp.speed = 6;
                 }
             });
 

@@ -4,6 +4,8 @@ import { Constant } from "./Constant";
 import { Util } from "./Util";
 import { Weapon } from "./Weapon";
 import { Sword } from "./Sword";
+import { Globals } from "./Globals";
+import { FireExplode } from "./FireExplode";
 const { ccclass, property } = _decorator;
 
 @ccclass("Monster")
@@ -107,12 +109,17 @@ export class Monster extends Component {
                     this.hurt(other.node.getComponent(Sword).attack);
                     break;
                 case Constant.WeaponTag.FIREBALL:
+                    const ndExplode = Globals.getNode(Constant.PrefabUrl.FIRE_EXPLODE, BattleContext.ndWeapon);
+                    ndExplode.worldPosition = this.node.worldPosition;
+                    Globals.putNode(other.node);
+                    break;
+                case Constant.WeaponTag.FIRE_EXPLODE:
                     Util.showText(
-                        `${other.node.getComponent(Weapon).attack}`,
+                        `${other.node.getComponent(FireExplode).attack}`,
                         this.node.worldPosition,
                         BattleContext.ndTextParent,
                     );
-                    this.hurt(other.node.getComponent(Weapon).attack);
+                    this.hurt(other.node.getComponent(FireExplode).attack);
                     break;
                 default:
                     break;
