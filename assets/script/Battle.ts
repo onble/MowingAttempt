@@ -1,8 +1,9 @@
-import { _decorator, Component, Layers, Node } from "cc";
+import { _decorator, Component, Layers, Node, Prefab, randomRangeInt, resources } from "cc";
 import { Joystick } from "./Joystick";
 import { Player } from "./Player";
 import { BattleContext } from "./BattleContext";
 import { Util } from "./Util";
+import { Monster } from "./Monster";
 const { ccclass, property } = _decorator;
 
 @ccclass("Battle")
@@ -24,6 +25,7 @@ export class Battle extends Component {
         BattleContext.ndTextParent = ndTextParent;
     }
 
+    //#region 生命周期
     protected onEnable(): void {
         this.ndJoystick.getComponent(Joystick).onTouchEvent((event: number, radian: number | null | undefined) => {
             switch (event) {
@@ -48,10 +50,39 @@ export class Battle extends Component {
     }
 
     start() {
-        Util.createMonster(100, BattleContext.ndMonsterParent);
+        this._loadPrefabs().then(() => {
+            this._startGame();
+        });
     }
 
     update(deltaTime: number) {}
 
     protected onDestroy(): void {}
+
+    //#endregion 生命周期
+
+    private _startGame() {
+        // Util.createMonster(100, BattleContext.ndMonsterParent);
+
+        for (let i = 0; i < 100; i++) {
+            const node = Util.createMonster(BattleContext.prefabs["PinkMonster"], BattleContext.ndMonsterParent);
+            node.setPosition(randomRangeInt(-500, 500), randomRangeInt(-500, 500));
+            node.getComponent(Monster).speed = 1.5;
+        }
+    }
+
+    private _loadPrefabs() {
+        return new Promise((resolve, reject) => {
+            resources.load("PinkMonster", (err: Error, prefab: Prefab) => {
+                if (err) {
+                    reject(null);
+                    return;
+                }
+
+                resolve(prefab);
+            });
+        }).then((prefab: Prefab) => {
+            BattleContext.prefabs[prefab.name] = prefab;
+        });
+    }
 }
