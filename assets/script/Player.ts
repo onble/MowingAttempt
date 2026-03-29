@@ -3,6 +3,7 @@ import { Constant } from "./Constant";
 import { Util } from "./Util";
 import { BattleContext } from "./BattleContext";
 import { Weapon } from "./Weapon";
+import { PoolManager } from "./PoolManager";
 const { ccclass, property } = _decorator;
 
 @ccclass("Player")
@@ -104,7 +105,7 @@ export class Player extends Component {
             .delay(0.1)
             .call(() => {
                 const pfDagger = BattleContext.prefabs[Constant.PrefabUrl.DAGGER];
-                const ndDagger = instantiate(pfDagger);
+                const ndDagger = PoolManager.getInstance().get(pfDagger);
 
                 ndDagger.parent = BattleContext.ndWeapon;
                 ndDagger.worldPosition = this.node.worldPosition;
@@ -113,6 +114,7 @@ export class Player extends Component {
                 const wp = ndDagger.getComponent(Weapon);
                 wp.isMoving = true;
                 wp.moveDirection = this.attackDirection;
+                wp.speed = 12;
             });
 
         tween(this.node).repeatForever(tw).start();

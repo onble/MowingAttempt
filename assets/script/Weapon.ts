@@ -1,5 +1,6 @@
 import { _decorator, Component, Node } from "cc";
 import { Util } from "./Util";
+import { PoolManager } from "./PoolManager";
 const { ccclass, property } = _decorator;
 
 @ccclass("Weapon")
@@ -19,7 +20,7 @@ export class Weapon extends Component {
 
             this.speed -= this.resist;
             if (this.speed < 0) {
-                this.node.destroy();
+                PoolManager.getInstance().put(this.node);
             }
         }
     }
