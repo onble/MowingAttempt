@@ -4,6 +4,7 @@ import { Util } from "./Util";
 import { BattleContext } from "./BattleContext";
 import { Weapon } from "./Weapon";
 import { PoolManager } from "./PoolManager";
+import { Surround } from "./Surround";
 const { ccclass, property } = _decorator;
 
 @ccclass("Player")
@@ -131,5 +132,14 @@ export class Player extends Component {
             }
         }
         return target;
+    }
+
+    startSoundingSword() {
+        const pfSurround = BattleContext.prefabs[Constant.PrefabUrl.SURROUND];
+
+        const ndSurround = PoolManager.getInstance().get(pfSurround);
+        ndSurround.parent = BattleContext.ndWeapon;
+
+        ndSurround.getComponent(Surround).isMoving = true;
     }
 }

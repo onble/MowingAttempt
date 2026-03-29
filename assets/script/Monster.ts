@@ -3,6 +3,7 @@ import { BattleContext } from "./BattleContext";
 import { Constant } from "./Constant";
 import { Util } from "./Util";
 import { Weapon } from "./Weapon";
+import { Sword } from "./Sword";
 const { ccclass, property } = _decorator;
 
 @ccclass("Monster")
@@ -97,6 +98,15 @@ export class Monster extends Component {
                         BattleContext.ndTextParent,
                     );
                     this.hurt(other.node.getComponent(Weapon).attack);
+                    break;
+                case Constant.WeaponTag.SWORD:
+                    Util.showText(
+                        BattleContext.prefabs[Constant.PrefabUrl.DAMAGE_TEXT],
+                        `${other.node.getComponent(Sword).attack}`,
+                        this.node.worldPosition,
+                        BattleContext.ndTextParent,
+                    );
+                    this.hurt(other.node.getComponent(Sword).attack);
                     break;
                 default:
                     break;

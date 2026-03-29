@@ -83,5 +83,6 @@ export class Battle extends Component {
         }
 
         BattleContext.ndPlayer.getComponent(Player).startEndlessDagger();
+        BattleContext.ndPlayer.getComponent(Player).startSoundingSword();
     }
 }
