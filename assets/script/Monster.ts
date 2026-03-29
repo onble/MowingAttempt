@@ -92,7 +92,6 @@ export class Monster extends Component {
             switch (other.tag) {
                 case Constant.WeaponTag.DAGGER:
                     Util.showText(
-                        BattleContext.prefabs[Constant.PrefabUrl.DAMAGE_TEXT],
                         `${other.node.getComponent(Weapon).attack}`,
                         this.node.worldPosition,
                         BattleContext.ndTextParent,
@@ -101,7 +100,6 @@ export class Monster extends Component {
                     break;
                 case Constant.WeaponTag.SWORD:
                     Util.showText(
-                        BattleContext.prefabs[Constant.PrefabUrl.DAMAGE_TEXT],
                         `${other.node.getComponent(Sword).attack}`,
                         this.node.worldPosition,
                         BattleContext.ndTextParent,

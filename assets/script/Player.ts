@@ -5,6 +5,7 @@ import { BattleContext } from "./BattleContext";
 import { Weapon } from "./Weapon";
 import { PoolManager } from "./PoolManager";
 import { Surround } from "./Surround";
+import { Globals } from "./Globals";
 const { ccclass, property } = _decorator;
 
 @ccclass("Player")
@@ -89,12 +90,7 @@ export class Player extends Component {
     //#region 事件监听
     private onBeginContact(self: Collider2D, other: Collider2D) {
         if (other.group === Constant.ColliderGroup.MONSTER) {
-            Util.showText(
-                BattleContext.prefabs[Constant.PrefabUrl.DAMAGE_TEXT],
-                "12",
-                this.node.worldPosition,
-                BattleContext.ndTextParent,
-            );
+            Util.showText("12", this.node.worldPosition, BattleContext.ndTextParent);
         }
     }
 
@@ -105,10 +101,7 @@ export class Player extends Component {
         const tw = tween(this.node)
             .delay(0.1)
             .call(() => {
-                const pfDagger = BattleContext.prefabs[Constant.PrefabUrl.DAGGER];
-                const ndDagger = PoolManager.getInstance().get(pfDagger);
-
-                ndDagger.parent = BattleContext.ndWeapon;
+                const ndDagger = Globals.getNode(Constant.PrefabUrl.DAGGER, BattleContext.ndWeapon);
                 ndDagger.worldPosition = this.node.worldPosition;
                 ndDagger.angle = toDegree(this.attackDirection);
 
@@ -135,11 +128,7 @@ export class Player extends Component {
     }
 
     startSoundingSword() {
-        const pfSurround = BattleContext.prefabs[Constant.PrefabUrl.SURROUND];
-
-        const ndSurround = PoolManager.getInstance().get(pfSurround);
-        ndSurround.parent = BattleContext.ndWeapon;
-
+        const ndSurround = Globals.getNode(Constant.PrefabUrl.SURROUND, BattleContext.ndWeapon);
         ndSurround.getComponent(Surround).isMoving = true;
     }
 }

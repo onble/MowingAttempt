@@ -6,6 +6,7 @@ import { Util } from "./Util";
 import { Monster } from "./Monster";
 import { Constant } from "./Constant";
 import { ResUtil } from "./ResUtil";
+import { Globals } from "./Globals";
 const { ccclass, property } = _decorator;
 
 @ccclass("Battle")
@@ -53,19 +54,7 @@ export class Battle extends Component {
     }
 
     start() {
-        const keys = Object.keys(Constant.PrefabUrl);
-        const promises: Promise<any>[] = [];
-        keys.forEach((key) => {
-            const url = Constant.PrefabUrl[key];
-            const p = ResUtil.loadPrefab(url).then((pf: Prefab) => {
-                BattleContext.prefabs[url] = pf;
-            });
-            promises.push(p);
-        });
-
-        Promise.all(promises).then(() => {
-            this._startGame();
-        });
+        this._startGame();
     }
 
     update(deltaTime: number) {}
@@ -78,7 +67,7 @@ export class Battle extends Component {
         // Util.createMonster(100, BattleContext.ndMonsterParent);
 
         for (let i = 0; i < 100; i++) {
-            const node = Util.createMonster(BattleContext.prefabs["PinkMonster"], BattleContext.ndMonsterParent);
+            const node = Globals.getNode(Constant.PrefabUrl.PINK_MONSTER, BattleContext.ndMonsterParent);
             node.setPosition(randomRangeInt(-500, 500), randomRangeInt(-500, 500));
             node.getComponent(Monster).speed = 1.2;
         }

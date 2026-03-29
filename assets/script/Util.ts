@@ -1,10 +1,11 @@
 import { instantiate, Label, Node, Prefab, random, randomRange, randomRangeInt, resources, tween, v3, Vec3 } from "cc";
 import { Monster } from "./Monster";
+import { Globals } from "./Globals";
+import { Constant } from "./Constant";
 
 export class Util {
-    static showText(pf: Prefab, text: string, worldPos: Vec3, parent: Node) {
-        const ndText = instantiate(pf);
-        ndText.parent = parent;
+    static showText(text: string, worldPos: Vec3, parent: Node) {
+        const ndText = Globals.getNode(Constant.PrefabUrl.DAMAGE_TEXT, parent);
 
         ndText.getComponent(Label).string = text;
 
