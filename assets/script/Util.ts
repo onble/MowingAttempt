@@ -1,4 +1,4 @@
-import { instantiate, Label, Node, Prefab, random, randomRange, randomRangeInt, resources, tween, Vec3 } from "cc";
+import { instantiate, Label, Node, Prefab, random, randomRange, randomRangeInt, resources, tween, v3, Vec3 } from "cc";
 import { Monster } from "./Monster";
 
 export class Util {
@@ -7,10 +7,20 @@ export class Util {
         ndText.parent = parent;
 
         ndText.getComponent(Label).string = text;
-        ndText.setWorldPosition(worldPos);
+
+        const newPos = v3(worldPos);
+        newPos.add3f(randomRangeInt(-10, 10), 30, 0);
+
+        ndText.setWorldPosition(newPos);
+
+        // 放大->等待->消失
+
+        ndText.setScale(1, 1);
 
         tween(ndText)
-            .delay(1.5)
+            .to(0.1, { scale: new Vec3(1.5, 1.5, ndText.scale.z) })
+            .delay(0.5)
+            .to(0.1, { scale: new Vec3(0.1, 0.1, ndText.scale.z) })
             .call(() => {
                 ndText.destroy();
             })
