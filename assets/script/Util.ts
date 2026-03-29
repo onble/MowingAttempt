@@ -40,4 +40,10 @@ export class Util {
         const y = node.position.y + Math.sin(radian) * distance;
         node.setPosition(x, y);
     }
+
+    static getRadian(start: Vec3, end: Vec3): number {
+        const dx = end.x - start.x;
+        const dy = end.y - start.y;
+        return Math.atan2(dy, dx);
+    }
 }

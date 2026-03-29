@@ -1,4 +1,4 @@
-import { _decorator, Collider2D, Component, Contact2DType, instantiate, Node, toDegree, tween } from "cc";
+import { _decorator, bits, Collider2D, Component, Contact2DType, instantiate, Node, toDegree, tween, Vec2 } from "cc";
 import { Constant } from "./Constant";
 import { Util } from "./Util";
 import { BattleContext } from "./BattleContext";
@@ -23,6 +23,21 @@ export class Player extends Component {
      */
     isMoving: boolean = false;
 
+    attackDirection: number = 0;
+
+    /**
+     * 血量
+     */
+    hp: number = 100;
+    /**
+     * 攻击
+     */
+    ap: number = 10;
+    /**
+     * 防御
+     */
+    dp: number = 5;
+
     //#region 生命周期
     protected onEnable(): void {
         const colldier = this.node.getComponent(Collider2D);
@@ -33,6 +48,13 @@ export class Player extends Component {
     }
     start() {
         this.isMoving = false;
+
+        this.schedule(() => {
+            const nearestNode = this.getNearestMonster();
+            if (nearestNode) {
+                this.attackDirection = Util.getRadian(this.node.worldPosition, nearestNode.worldPosition);
+            }
+        });
     }
 
     update(deltaTime: number) {
@@ -56,6 +78,8 @@ export class Player extends Component {
             colldier.off(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             colldier.off(Contact2DType.END_CONTACT, this.onEndContact, this);
         }
+
+        this.unscheduleAllCallbacks();
     }
 
     //#endregion 生命周期
@@ -84,13 +108,26 @@ export class Player extends Component {
 
                 ndDagger.parent = BattleContext.ndWeapon;
                 ndDagger.worldPosition = this.node.worldPosition;
-                ndDagger.angle = toDegree(this.moveDirection);
+                ndDagger.angle = toDegree(this.attackDirection);
 
                 const wp = ndDagger.getComponent(Weapon);
                 wp.isMoving = true;
-                wp.moveDirection = this.moveDirection;
+                wp.moveDirection = this.attackDirection;
             });
 
         tween(this.node).repeatForever(tw).start();
+    }
+
+    getNearestMonster() {
+        const monsters = BattleContext.ndMonsterParent.children;
+        let min = bits.INT_MAX;
+        let target: Node = null;
+        for (let i = 0; i < monsters.length; i++) {
+            const distance = Vec2.distance(monsters[i].worldPosition, this.node.worldPosition);
+            if (distance < min) {
+                target = monsters[i];
+            }
+        }
+        return target;
     }
 }

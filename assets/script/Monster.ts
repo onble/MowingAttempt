@@ -23,6 +23,19 @@ export class Monster extends Component {
      */
     isMoving: boolean = false;
 
+    /**
+     * 血量
+     */
+    hp: number = 100;
+    /**
+     * 攻击
+     */
+    ap: number = 10;
+    /**
+     * 防御
+     */
+    dp: number = 5;
+
     //#region 生命周期
     protected onEnable(): void {
         const colldier = this.node.getComponent(Collider2D);
@@ -30,6 +43,8 @@ export class Monster extends Component {
             colldier.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             colldier.on(Contact2DType.END_CONTACT, this.onEndContact, this);
         }
+
+        this.hp = 100;
     }
 
     start() {
@@ -81,6 +96,7 @@ export class Monster extends Component {
                         this.node.worldPosition,
                         BattleContext.ndTextParent,
                     );
+                    this.hurt(other.node.getComponent(Weapon).attack);
                     break;
                 default:
                     break;
@@ -90,4 +106,11 @@ export class Monster extends Component {
 
     private onEndContact(self: Collider2D, other: Collider2D) {}
     //#endregion 事件监听
+
+    hurt(val: number) {
+        this.hp -= val;
+        if (this.hp <= 0) {
+            this.node.destroy();
+        }
+    }
 }

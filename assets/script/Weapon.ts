@@ -9,11 +9,18 @@ export class Weapon extends Component {
     moveDirection: number = 0;
     isMoving: boolean = true;
 
+    resist: number = 0.1;
+
     start() {}
 
     update(deltaTime: number) {
         if (this.isMoving) {
             Util.moveNode(this.node, this.moveDirection, this.speed);
+
+            this.speed -= this.resist;
+            if (this.speed < 0) {
+                this.node.destroy();
+            }
         }
     }
 }
