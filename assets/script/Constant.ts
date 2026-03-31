@@ -15,6 +15,7 @@ export class Constant {
         SURROUND: "Surround",
         FIREBALL: "Fireball",
         FIRE_EXPLODE: "FireExplode",
+        THUNDER: "Thunder",
     };
 
     static readonly WeaponTag = {
@@ -22,5 +23,6 @@ export class Constant {
         SWORD: 1,
         FIREBALL: 2,
         FIRE_EXPLODE: 3,
+        THUNDER: 4,
     };
 }

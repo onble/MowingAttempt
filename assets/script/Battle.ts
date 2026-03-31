@@ -74,6 +74,7 @@ export class Battle extends Component {
 
         // BattleContext.ndPlayer.getComponent(Player).startEndlessDagger();
         // BattleContext.ndPlayer.getComponent(Player).startSoundingSword();
-        BattleContext.ndPlayer.getComponent(Player).startFireball();
+        // BattleContext.ndPlayer.getComponent(Player).startFireball();
+        BattleContext.ndPlayer.getComponent(Player).startThunder();
     }
 }

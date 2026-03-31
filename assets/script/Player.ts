@@ -18,6 +18,7 @@ import { Weapon } from "./Weapon";
 import { PoolManager } from "./PoolManager";
 import { Surround } from "./Surround";
 import { Globals } from "./Globals";
+import { Thunder } from "./Thunder";
 const { ccclass, property } = _decorator;
 
 @ccclass("Player")
@@ -161,6 +162,28 @@ export class Player extends Component {
                     wp.moveDirection = toRadian(startDegree + deltaAngle * i);
                     wp.attack = 30;
                     wp.speed = 6;
+                }
+            });
+
+        tween(this.node).repeatForever(tw).start();
+    }
+
+    startThunder() {
+        const tw = tween(this.node)
+            .delay(2)
+            .call(() => {
+                for (let i = 0; i < 10; i++) {
+                    this.scheduleOnce(() => {
+                        const nearestMonster = this.getNearestMonster();
+                        if (nearestMonster) {
+                            const ndThunder = Globals.getNode(Constant.PrefabUrl.THUNDER, BattleContext.ndWeapon);
+
+                            ndThunder.worldPosition = nearestMonster.worldPosition;
+
+                            const wp = ndThunder.getComponent(Thunder);
+                            wp.attack = 30;
+                        }
+                    }, 0.15 * i);
                 }
             });
 

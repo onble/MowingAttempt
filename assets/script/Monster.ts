@@ -6,6 +6,7 @@ import { Weapon } from "./Weapon";
 import { Sword } from "./Sword";
 import { Globals } from "./Globals";
 import { FireExplode } from "./FireExplode";
+import { Thunder } from "./Thunder";
 const { ccclass, property } = _decorator;
 
 @ccclass("Monster")
@@ -120,6 +121,15 @@ export class Monster extends Component {
                         BattleContext.ndTextParent,
                     );
                     this.hurt(other.node.getComponent(FireExplode).attack);
+                    break;
+
+                case Constant.WeaponTag.THUNDER:
+                    Util.showText(
+                        `${other.node.getComponent(Thunder).attack}`,
+                        this.node.worldPosition,
+                        BattleContext.ndTextParent,
+                    );
+                    this.hurt(other.node.getComponent(Thunder).attack);
                     break;
                 default:
                     break;
