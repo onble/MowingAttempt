@@ -1,4 +1,4 @@
-import { _decorator, Component, Layers, Node, Prefab, randomRangeInt, resources } from "cc";
+import { _decorator, Component, Layers, Node, Prefab, randomRangeInt, resources, toDegree } from "cc";
 import { Joystick } from "./Joystick";
 import { Player } from "./Player";
 import { BattleContext } from "./BattleContext";
@@ -7,12 +7,15 @@ import { Monster } from "./Monster";
 import { Constant } from "./Constant";
 import { ResUtil } from "./ResUtil";
 import { Globals } from "./Globals";
+import { SkillButton } from "./SkillButton";
 const { ccclass, property } = _decorator;
 
 @ccclass("Battle")
 export class Battle extends Component {
     @property(Node) ndPlayer: Node;
     @property(Node) ndJoystick: Node;
+    @property(Node) ndBtnSkill: Node;
+    @property(Node) ndIndicator: Node;
 
     protected onLoad(): void {
         BattleContext.ndPlayer = this.ndPlayer;
@@ -48,6 +51,10 @@ export class Battle extends Component {
                 default:
                     break;
             }
+        });
+
+        this.ndBtnSkill.getComponent(SkillButton).onEvent((radian: number) => {
+            this.ndIndicator.angle = toDegree(radian);
         });
 
         this.ndPlayer.getComponent(Player).isMoving = true;
