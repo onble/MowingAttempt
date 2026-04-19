@@ -31,7 +31,7 @@ export class Battle extends Component {
 
     //#region 生命周期
     protected onEnable(): void {
-        this.ndJoystick.getComponent(Joystick).onTouchEvent((event: number, radian: number | null | undefined) => {
+        this.ndJoystick.getComponent(Joystick).onJoystickEvent((event: number, radian: number | null | undefined) => {
             switch (event) {
                 case Joystick.Event.START:
                     this.ndPlayer.getComponent(Player).isMoving = true;
