@@ -1,4 +1,4 @@
-import { _decorator, Component, EventTouch, math, Node, UITransform, Vec2, Vec3 } from "cc";
+import { _decorator, Component, EventTouch, math, Node, UITransform, v3, Vec2, Vec3, warn } from "cc";
 const { ccclass, property } = _decorator;
 
 @ccclass("Joystick")
@@ -6,13 +6,16 @@ export class Joystick extends Component {
     @property(Node)
     ndHand: Node;
 
+    @property(Node)
+    ndPanel: Node;
+
     /** 存储整体控制器的半径 */
     private _radius: number = 0;
     /** 存储触摸点的世界坐标world position */
     private _v2: Vec2 = new Vec2();
-    private _touchWorldPos: Vec3 = new Vec3();
-    private _currPos: Vec3 = new Vec3();
-    private readonly _startPos: Vec3 = new Vec3(0, 0);
+    private _v3: Vec3 = new Vec3();
+    private _currPos: Vec3 = v3();
+    private _startPos: Vec3 = v3();
 
     private _listeneer: Function;
     private _target: any;
@@ -29,7 +32,7 @@ export class Joystick extends Component {
 
     protected onEnable(): void {
         // 根据整体图片的大小获得控制器的半径
-        this._radius = this.node.getComponent(UITransform).contentSize.width / 2;
+        this._radius = this.ndPanel.getComponent(UITransform).contentSize.width / 4;
 
         // 给控制器绑定事件
         this.node.on(Node.EventType.TOUCH_START, this.onHandStart, this);
@@ -54,15 +57,20 @@ export class Joystick extends Component {
         // 如何是60帧，则deltaTime约等于16.7ms
     }
 
-    onHandStart() {
+    onHandStart(event: EventTouch) {
         this._notify(Joystick.Event.START);
+
+        event.getUIStartLocation(this._v2);
+
+        this.node.getComponent(UITransform).convertToNodeSpaceAR(this._v3.set(this._v2.x, this._v2.y), this._startPos);
+        this.ndPanel.setPosition(this._startPos);
+        this.ndHand.setPosition(this._startPos);
     }
 
     onHandMove(event: EventTouch) {
         // 获得触摸点的世界坐标world position
         event.getUILocation(this._v2);
-        this._touchWorldPos.set(this._v2.x, this._v2.y);
-        this.node.getComponent(UITransform).convertToNodeSpaceAR(this._touchWorldPos, this._currPos);
+        this.node.getComponent(UITransform).convertToNodeSpaceAR(this._v3.set(this._v2.x, this._v2.y), this._currPos);
 
         const distance = Vec2.distance(this._startPos, this._currPos);
         const radian = Math.atan2(this._currPos.y - this._startPos.y, this._currPos.x - this._startPos.x);
@@ -82,7 +90,7 @@ export class Joystick extends Component {
 
     onHandEnd() {
         // 将中间的控制器位置归零
-        this.ndHand.setPosition(0, 0);
+        this.ndHand.setPosition(this._startPos);
         this._notify(Joystick.Event.END);
     }
 
