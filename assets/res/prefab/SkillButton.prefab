@@ -679,8 +679,12 @@
     "__prefab": {
       "__id__": 33
     },
-    "ndText": null,
-    "ndIcon": null,
+    "ndText": {
+      "__id__": 22
+    },
+    "ndIcon": {
+      "__id__": 9
+    },
     "_id": ""
   },
   {
